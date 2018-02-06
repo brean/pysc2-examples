@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
-from baselines.acktr.utils import conv, fc, dense, conv_to_fc, sample, kl_div
+from baselines.acktr.utils import dense, kl_div
+from baselines.a2c.utils import conv, fc, conv_to_fc, sample
 from baselines.common.distributions import make_pdtype
 import baselines.common.tf_util as U
 from pysc2.lib.features import actions
@@ -57,12 +58,11 @@ class CnnPolicy(object):
         h3 = conv_to_fc(h2)  # 131072
         h4 = fc(h3, 'fc1', nh=256, init_scale=np.sqrt(2))  # ?, 256
         pi_ = fc(
-            h4, 'pi', nact,
-            act=lambda x: x)  # ( nenv * nsteps, 524) # ?, 524
+            h4, 'pi', nact)  # ( nenv * nsteps, 524) # ?, 524
         pi = tf.nn.softmax(pi_)
 
         vf = fc(
-            h4, 'v', 1, act=lambda x: x)  # ( nenv * nsteps, 1) # ?, 1
+            h4, 'v', 1)  # ( nenv * nsteps, 1) # ?, 1
 
       # vf = tf.nn.l2_normalize(vf_, 1)
 

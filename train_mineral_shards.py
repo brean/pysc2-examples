@@ -165,7 +165,10 @@ def main():
 
     seed = 0
 
-    env = SubprocVecEnv(FLAGS.num_agents + FLAGS.num_scripts, FLAGS.map)
+    env = SubprocVecEnv(
+        nenvs=FLAGS.num_agents,
+        nscripts=FLAGS.num_scripts,
+        map_name=FLAGS.map)
 
     policy_fn = CnnPolicy
     a2c.learn(
@@ -299,4 +302,8 @@ def a2c_callback(locals, globals):
 
 
 if __name__ == '__main__':
+  import sys
+  from absl import flags
+  FLAGS = flags.FLAGS
+  FLAGS(sys.argv)
   main()

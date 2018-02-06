@@ -9,6 +9,7 @@ from pysc2.env import sc2_env
 from pysc2.lib import actions
 from pysc2.lib import actions as sc2_actions
 from pysc2.lib import features
+import baselines.deepq.utils as QU
 
 import deepq_mineral_shards
 
@@ -43,7 +44,7 @@ def main():
       dueling=True)
 
     def make_obs_ph(name):
-      return U.BatchInput((64, 64), name=name)
+      return QU.BatchInput((64, 64), name=name)
 
     act_params = {
       'make_obs_ph': make_obs_ph,

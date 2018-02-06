@@ -158,15 +158,18 @@ envs: list of gym environments to run in subprocesses
     self.action_space, self.observation_space = self.remotes[0].recv()
     #print("action_space: ", self.action_space, " observation_space: ", self.observation_space)
 
-  def step(self, actions):
-    for remote, action in zip(self.remotes, actions):
-      remote.send(('step', [action]))
+  def step_wait(self):
     results = [remote.recv() for remote in self.remotes]
     obs, rews, dones, infos, army_counts, control_groups, selected, xy_per_marine = zip(
       *results)
     return np.stack(obs), np.stack(rews), np.stack(
       dones), infos, army_counts, control_groups, np.stack(
       selected), xy_per_marine
+
+  def step_async(self, actions):
+    for remote, action in zip(self.remotes, actions):
+      remote.send(('step', [action]))
+    self.waiting = True
 
   def reset(self):
     for remote in self.remotes:
